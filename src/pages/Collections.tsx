@@ -4,12 +4,20 @@ import SEO from '../components/SEO';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import type { Category } from '../types';
 
+const COLLECTION_IMAGES: Record<string, string> = {
+  dresses: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80&auto=format&fit=crop',
+  tops: 'https://images.unsplash.com/photo-1564257631407-4deb1f99d992?w=800&q=80&auto=format&fit=crop',
+  bottoms: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&q=80&auto=format&fit=crop',
+  outerwear: 'https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=800&q=80&auto=format&fit=crop',
+  accessories: 'https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=800&q=80&auto=format&fit=crop',
+};
+
 const FALLBACK_CATEGORIES: (Category & { eyebrow: string })[] = [
-  { id: '1', slug: 'dresses', name: 'Dresses & Jumpsuits', description: 'Elegant pieces for every occasion', image_url: null, sort_order: 1, eyebrow: 'Featured' },
-  { id: '2', slug: 'tops', name: 'Tops', description: 'Everyday essentials and statement pieces', image_url: null, sort_order: 2, eyebrow: 'Everyday' },
-  { id: '3', slug: 'bottoms', name: 'Bottoms', description: 'Effortless silhouettes', image_url: null, sort_order: 3, eyebrow: 'Effortless' },
-  { id: '4', slug: 'outerwear', name: 'Outerwear', description: 'Layer up in style', image_url: null, sort_order: 4, eyebrow: 'Layer Up' },
-  { id: '5', slug: 'accessories', name: 'Accessories', description: 'Complete your look', image_url: null, sort_order: 5, eyebrow: 'Complete' },
+  { id: '1', slug: 'dresses', name: 'Dresses & Jumpsuits', description: 'Elegant pieces for every occasion', image_url: COLLECTION_IMAGES.dresses, sort_order: 1, eyebrow: 'Featured' },
+  { id: '2', slug: 'tops', name: 'Tops', description: 'Everyday essentials and statement pieces', image_url: COLLECTION_IMAGES.tops, sort_order: 2, eyebrow: 'Everyday' },
+  { id: '3', slug: 'bottoms', name: 'Bottoms', description: 'Effortless silhouettes', image_url: COLLECTION_IMAGES.bottoms, sort_order: 3, eyebrow: 'Effortless' },
+  { id: '4', slug: 'outerwear', name: 'Outerwear', description: 'Layer up in style', image_url: COLLECTION_IMAGES.outerwear, sort_order: 4, eyebrow: 'Layer Up' },
+  { id: '5', slug: 'accessories', name: 'Accessories', description: 'Complete your look', image_url: COLLECTION_IMAGES.accessories, sort_order: 5, eyebrow: 'Complete' },
 ];
 
 const GRADIENT_STYLES = [
@@ -75,8 +83,8 @@ export default function Collections() {
                 <div
                   className="collection-card-bg"
                   style={{
-                    background: cat.image_url
-                      ? `linear-gradient(to top, rgba(0,0,0,0.5), rgba(0,0,0,0.1)), url(${cat.image_url}) center/cover`
+                    background: (cat.image_url || COLLECTION_IMAGES[cat.slug])
+                      ? `linear-gradient(to top, rgba(0,0,0,0.45), rgba(0,0,0,0.05)), url(${cat.image_url || COLLECTION_IMAGES[cat.slug]}) center/cover`
                       : GRADIENT_STYLES[i % GRADIENT_STYLES.length],
                   }}
                 />

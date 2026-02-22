@@ -1356,13 +1356,310 @@ body {
 
 /* ---- ACCOUNT PAGE ---- */
 .account-page {
-  max-width: 480px;
+  max-width: 520px;
   margin: 0 auto;
-  padding: 4rem 2rem 6rem;
+  padding: 3rem 2rem 6rem;
 }
 
-.account-page .page-header {
+/* ── Loading dots ── */
+.account-loading {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 8rem 0;
+}
+.account-loading-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--sage);
+  animation: accountPulse 1.4s infinite ease-in-out both;
+}
+.account-loading-dot:nth-child(2) { animation-delay: 0.16s; }
+.account-loading-dot:nth-child(3) { animation-delay: 0.32s; }
+@keyframes accountPulse {
+  0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1.2); }
+}
+
+/* ── Signed-in: Hero ── */
+.account-hero {
+  text-align: center;
+  padding-bottom: 2rem;
+}
+.account-avatar-wrap {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1.25rem;
+}
+.account-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+.account-avatar-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+  color: white;
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.08em;
+}
+.account-avatar-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold);
+  opacity: 0.5;
+  pointer-events: none;
+}
+.account-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: var(--text-dark);
+  margin: 0 0 0.25rem;
+}
+.account-email {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.82rem;
+  color: var(--text-mid);
+  margin: 0;
+}
+.account-member-since {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0.6rem 0 0;
+}
+
+/* ── Stats strip ── */
+.account-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid rgba(122,140,117,0.12);
+  border-bottom: 1px solid rgba(122,140,117,0.12);
+  margin-bottom: 2rem;
+}
+.account-stat {
+  text-decoration: none;
+  text-align: center;
+  transition: opacity 0.2s;
+}
+.account-stat:hover { opacity: 0.7; }
+.account-stat-number {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--text-dark);
+  line-height: 1;
+}
+.account-stat-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  margin-top: 0.3rem;
+  display: block;
+}
+.account-stat-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(122,140,117,0.15);
+}
+
+/* ── Quick link cards ── */
+.account-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
   margin-bottom: 2.5rem;
+}
+.account-link-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: white;
+  border: 1px solid rgba(122,140,117,0.1);
+  text-decoration: none;
+  transition: all 0.25s;
+}
+.account-link-card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  transform: translateX(4px);
+}
+.account-link-icon {
+  font-size: 1.3rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cream);
+  border-radius: 50%;
+  flex-shrink: 0;
+  color: var(--sage-dark);
+}
+.account-link-title {
+  display: block;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+.account-link-desc {
+  display: block;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  color: var(--text-mid);
+  margin-top: 0.1rem;
+}
+.account-link-arrow {
+  margin-left: auto;
+  font-size: 1rem;
+  color: var(--text-mid);
+  transition: color 0.25s, transform 0.25s;
+}
+.account-link-card:hover .account-link-arrow {
+  color: var(--gold);
+  transform: translateX(3px);
+}
+
+/* ── Sign out ── */
+.account-signout {
+  display: block;
+  width: 100%;
+  padding: 0.8rem;
+  background: transparent;
+  border: 1px solid rgba(122,140,117,0.2);
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.account-signout:hover {
+  border-color: #c44;
+  color: #c44;
+}
+
+/* ── Sign-in view ── */
+.account-signin {
+  max-width: 440px;
+}
+.account-signin-content {
+  text-align: center;
+  padding: 2rem 0;
+}
+.account-signin-brand {
+  margin-bottom: 2.5rem;
+}
+.account-signin-the {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+}
+.account-signin-aira {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.4rem;
+  font-style: italic;
+  color: var(--text-dark);
+  line-height: 1.2;
+}
+.account-signin-edit {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-top: 0.15rem;
+}
+.account-signin-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-dark);
+  margin: 0 0 0.5rem;
+}
+.account-signin-subtitle {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-mid);
+  line-height: 1.6;
+  margin: 0 0 2rem;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.account-signin-error {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.8rem;
+  color: #c44;
+  margin-bottom: 1rem;
+}
+.account-signin-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  color: var(--text-mid);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+}
+.account-signin-divider::before,
+.account-signin-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(122,140,117,0.15);
+}
+.account-guest-btn {
+  display: block;
+  width: 100%;
+  padding: 0.85rem;
+  background: transparent;
+  border: 1px solid rgba(122,140,117,0.2);
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dark);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.account-guest-btn:hover {
+  border-color: var(--sage);
+  color: var(--sage-dark);
+}
+.account-signin-footer {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.68rem;
+  color: var(--text-mid);
+  margin-top: 2rem;
+  opacity: 0.7;
 }
 
 .form-error {
@@ -1377,7 +1674,6 @@ body {
   justify-content: center;
   gap: 0.75rem;
   width: 100%;
-  max-width: 360px;
   padding: 0.9rem 2rem;
   background: white;
   color: var(--text-dark);
@@ -2601,7 +2897,9 @@ body {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-  .account-page { padding: 3rem 1.5rem 4rem; }
+  .account-page { padding: 2rem 1.25rem 4rem; }
+  .account-stats { gap: 1.5rem; }
+  .account-name { font-size: 1.5rem; }
   .collections-grid { grid-template-columns: 1fr; }
   .collection-card { min-height: 280px; }
   .lookbook-grid { grid-template-columns: 1fr 1fr; }

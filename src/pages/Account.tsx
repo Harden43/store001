@@ -1,9 +1,15 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
+import { useCartStore } from '../store/cartStore';
+import { useWishlistStore } from '../store/wishlistStore';
 import { isSupabaseConfigured } from '../lib/supabase';
+import SEO from '../components/SEO';
 
 export default function Account() {
   const { user, profile, loading, signInWithGoogle, signOut } = useAuthStore();
+  const totalItems = useCartStore((s) => s.totalItems);
+  const wishlistCount = useWishlistStore((s) => s.productIds.size);
   const [error, setError] = useState('');
   const [signingIn, setSigningIn] = useState(false);
 
@@ -27,13 +33,19 @@ export default function Account() {
   if (loading) {
     return (
       <div className="page">
-        <div className="account-page" style={{ textAlign: 'center' }}>
-          <p style={{ color: 'var(--text-mid)', fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>Loading...</p>
+        <SEO title="Account" />
+        <div className="account-page">
+          <div className="account-loading">
+            <div className="account-loading-dot" />
+            <div className="account-loading-dot" />
+            <div className="account-loading-dot" />
+          </div>
         </div>
       </div>
     );
   }
 
+  // ── Signed-in view ──
   if (user) {
     const displayName = profile?.full_name
       || user.user_metadata?.full_name
@@ -43,82 +55,109 @@ export default function Account() {
       || user.user_metadata?.avatar_url
       || user.user_metadata?.picture
       || null;
+    const initials = displayName
+      ? displayName.split(' ').map((w: string) => w[0]).join('').toUpperCase().slice(0, 2)
+      : (user.email?.[0] || '?').toUpperCase();
+    const memberSince = user.created_at
+      ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+      : null;
 
     return (
       <div className="page">
-        <div className="account-page">
-          <div className="page-header">
-            <span className="section-eyebrow">Your Account</span>
-            <h1 className="section-title"><em>Welcome back</em></h1>
+        <SEO title="My Account" />
+        <div className="account-page account-signed-in">
+          {/* Hero profile area */}
+          <div className="account-hero">
+            <div className="account-avatar-wrap">
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt={displayName || 'Profile'}
+                  referrerPolicy="no-referrer"
+                  className="account-avatar"
+                />
+              ) : (
+                <div className="account-avatar account-avatar-initials">
+                  {initials}
+                </div>
+              )}
+              <div className="account-avatar-ring" />
+            </div>
+            <h1 className="account-name">{displayName || 'Hello'}</h1>
+            <p className="account-email">{user.email}</p>
+            {memberSince && (
+              <p className="account-member-since">Member since {memberSince}</p>
+            )}
           </div>
 
-          <div className="cart-summary" style={{ textAlign: 'center' }}>
-            {avatarUrl && (
-              <img
-                src={avatarUrl}
-                alt={displayName || 'Profile'}
-                referrerPolicy="no-referrer"
-                style={{
-                  width: 72,
-                  height: 72,
-                  borderRadius: '50%',
-                  objectFit: 'cover',
-                  border: '2px solid var(--gold)',
-                  marginBottom: '1rem',
-                }}
-              />
-            )}
-            {displayName && (
-              <p style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontSize: '1.3rem',
-                color: 'var(--sage-dark)',
-                fontWeight: 400,
-                marginBottom: '0.25rem',
-              }}>
-                {displayName}
-              </p>
-            )}
-            <p style={{
-              fontFamily: "'Jost', sans-serif",
-              fontSize: '0.85rem',
-              color: 'var(--text-mid)',
-              marginBottom: '0.5rem',
-            }}>
-              {user.email}
-            </p>
-            <button
-              className="btn-outline"
-              onClick={signOut}
-              style={{ marginTop: '1.5rem', color: 'var(--text-dark)', borderColor: 'rgba(122,140,117,0.3)' }}
-            >
-              Sign Out
-            </button>
+          {/* Quick stats */}
+          <div className="account-stats">
+            <Link to="/wishlist" className="account-stat">
+              <span className="account-stat-number">{wishlistCount}</span>
+              <span className="account-stat-label">Wishlist</span>
+            </Link>
+            <div className="account-stat-divider" />
+            <Link to="/cart" className="account-stat">
+              <span className="account-stat-number">{totalItems()}</span>
+              <span className="account-stat-label">In Bag</span>
+            </Link>
           </div>
+
+          {/* Quick links */}
+          <div className="account-links">
+            <Link to="/shop" className="account-link-card">
+              <span className="account-link-icon">&#x2606;</span>
+              <div>
+                <span className="account-link-title">Browse Shop</span>
+                <span className="account-link-desc">Discover new arrivals</span>
+              </div>
+              <span className="account-link-arrow">&#x2192;</span>
+            </Link>
+            <Link to="/wishlist" className="account-link-card">
+              <span className="account-link-icon">&#x2661;</span>
+              <div>
+                <span className="account-link-title">My Wishlist</span>
+                <span className="account-link-desc">Your saved pieces</span>
+              </div>
+              <span className="account-link-arrow">&#x2192;</span>
+            </Link>
+            <Link to="/collections" className="account-link-card">
+              <span className="account-link-icon">&#x25C7;</span>
+              <div>
+                <span className="account-link-title">Collections</span>
+                <span className="account-link-desc">Curated for you</span>
+              </div>
+              <span className="account-link-arrow">&#x2192;</span>
+            </Link>
+          </div>
+
+          {/* Sign out */}
+          <button className="account-signout" onClick={signOut}>
+            Sign Out
+          </button>
         </div>
       </div>
     );
   }
 
+  // ── Sign-in view ──
   return (
     <div className="page">
-      <div className="account-page">
-        <div className="page-header">
-          <span className="section-eyebrow">Welcome</span>
-          <h1 className="section-title"><em>Sign In</em></h1>
-          <p style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontSize: '1.05rem',
-            color: 'var(--text-mid)',
-            marginTop: '1rem',
-            fontStyle: 'italic',
-          }}>
-            Continue with your Google account
-          </p>
-        </div>
+      <SEO title="Sign In" />
+      <div className="account-page account-signin">
+        <div className="account-signin-content">
+          <div className="account-signin-brand">
+            <span className="account-signin-the">the</span>
+            <span className="account-signin-aira">aira</span>
+            <span className="account-signin-edit">e d i t</span>
+          </div>
 
-        <div style={{ textAlign: 'center' }}>
-          {error && <p className="form-error" style={{ marginBottom: '1rem' }}>{error}</p>}
+          <h1 className="account-signin-title">Welcome</h1>
+          <p className="account-signin-subtitle">
+            Sign in to access your wishlist, track orders, and enjoy a personalized experience.
+          </p>
+
+          {error && <p className="account-signin-error">{error}</p>}
 
           <button
             onClick={handleGoogleSignIn}
@@ -131,8 +170,20 @@ export default function Account() {
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A11.96 11.96 0 0 0 0 12c0 1.94.46 3.77 1.28 5.39l3.56-2.77z"/>
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
-            {signingIn ? 'Redirecting...' : 'Sign in with Google'}
+            {signingIn ? 'Redirecting...' : 'Continue with Google'}
           </button>
+
+          <div className="account-signin-divider">
+            <span>or</span>
+          </div>
+
+          <Link to="/shop" className="account-guest-btn">
+            Browse as Guest
+          </Link>
+
+          <p className="account-signin-footer">
+            By signing in, you agree to our terms of service and privacy policy.
+          </p>
         </div>
       </div>
     </div>

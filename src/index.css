@@ -93,60 +93,37 @@ body {
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.25rem;
 }
 
-.nav-account-link {
-  color: var(--text-dark);
-  font-size: 1.2rem;
-  text-decoration: none;
-  transition: color 0.3s;
-  padding: 0.5rem;
-  min-width: 44px;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nav-account-link:hover { color: var(--gold); }
-
-.nav-actions button {
+.nav-actions button,
+.nav-actions .nav-wishlist-link,
+.nav-actions .nav-account-link {
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--text-dark);
-  font-size: 1.2rem;
-  transition: color 0.3s;
-  padding: 0.5rem;
-  min-width: 44px;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nav-actions button:hover { color: var(--gold); }
-
-.nav-wishlist-link {
-  position: relative;
-  color: var(--text-dark);
-  font-size: 1.35rem;
+  color: var(--text-mid);
   text-decoration: none;
   transition: color 0.3s;
   padding: 0.5rem;
-  min-width: 44px;
-  min-height: 44px;
+  min-width: 40px;
+  min-height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.nav-wishlist-link:hover { color: var(--gold); }
+.nav-actions button:hover,
+.nav-actions .nav-wishlist-link:hover,
+.nav-actions .nav-account-link:hover { color: var(--gold); }
+
+.nav-wishlist-link {
+  position: relative;
+}
 
 .wishlist-badge {
   position: absolute;
-  top: -6px; right: -10px;
+  top: 2px; right: 0;
   width: 16px; height: 16px;
   background: var(--gold);
   color: white;
@@ -164,7 +141,7 @@ body {
 
 .cart-badge {
   position: absolute;
-  top: -6px; right: -8px;
+  top: 2px; right: 2px;
   width: 16px; height: 16px;
   background: var(--gold);
   color: white;

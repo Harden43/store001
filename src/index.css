@@ -3843,3 +3843,217 @@ body {
   background: rgba(201,168,76,0.05);
   color: var(--gold);
 }
+
+/* ---- INFO / HELP PAGE ---- */
+.info-page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 2rem 6rem;
+}
+
+.info-section {
+  padding: 3rem 0;
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  scroll-margin-top: 100px;
+}
+
+.info-section:last-child {
+  border-bottom: none;
+}
+
+.info-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+}
+
+.info-subheading {
+  font-family: 'Jost', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-dark);
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.03em;
+}
+
+.info-text {
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--text-mid);
+  max-width: 680px;
+}
+
+/* Size Guide Table */
+.info-table-wrap {
+  overflow-x: auto;
+  margin-top: 1.5rem;
+}
+
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.info-table th {
+  text-align: left;
+  padding: 0.75rem 1.25rem;
+  font-family: 'Jost', sans-serif;
+  font-weight: 400;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  border-bottom: 2px solid rgba(201,168,76,0.3);
+}
+
+.info-table td {
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid rgba(122,140,117,0.1);
+  color: var(--text-dark);
+}
+
+.info-table tbody tr:hover {
+  background: rgba(201,168,76,0.04);
+}
+
+/* Shipping / Returns Columns */
+.info-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-top: 1.5rem;
+}
+
+.info-list {
+  list-style: none;
+  padding: 0;
+}
+
+.info-list li {
+  position: relative;
+  padding: 0.5rem 0 0.5rem 1.25rem;
+  font-size: 0.9rem;
+  color: var(--text-mid);
+  line-height: 1.6;
+}
+
+.info-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--sage-light);
+}
+
+/* FAQ Accordion */
+.info-faq-list {
+  margin-top: 1rem;
+}
+
+.info-faq {
+  border-bottom: 1px solid rgba(122,140,117,0.12);
+}
+
+.info-faq summary {
+  padding: 1.1rem 0;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--text-dark);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: color 0.2s;
+}
+
+.info-faq summary::-webkit-details-marker { display: none; }
+
+.info-faq summary::after {
+  content: '+';
+  font-size: 1.2rem;
+  color: var(--sage);
+  transition: transform 0.25s;
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+.info-faq[open] summary::after {
+  content: '−';
+}
+
+.info-faq summary:hover {
+  color: var(--gold);
+}
+
+.info-faq p {
+  padding: 0 0 1.25rem;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-mid);
+}
+
+/* Contact Cards */
+.info-contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  max-width: 520px;
+}
+
+.info-contact-card {
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.info-contact-card:hover {
+  border-color: rgba(201,168,76,0.35);
+  box-shadow: 0 4px 20px rgba(201,168,76,0.08);
+}
+
+.info-contact-icon {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.info-contact-link {
+  color: var(--sage-dark);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+
+.info-contact-link:hover {
+  color: var(--gold);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .info-page {
+    padding: 0 1.25rem 4rem;
+  }
+  .info-columns {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .info-contact-grid {
+    grid-template-columns: 1fr;
+  }
+  .info-heading {
+    font-size: 1.4rem;
+  }
+}

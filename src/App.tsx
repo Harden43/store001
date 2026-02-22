@@ -11,6 +11,7 @@ import About from './pages/About';
 import Journal from './pages/Journal';
 import Wishlist from './pages/Wishlist';
 import Account from './pages/Account';
+import Info from './pages/Info';
 import NotFound from './pages/NotFound';
 import AdminGuard from './components/admin/AdminGuard';
 import AdminLayout from './components/admin/AdminLayout';
@@ -59,6 +60,7 @@ export default function App() {
           <Route path="wishlist" element={<Wishlist />} />
           <Route path="cart" element={<Cart />} />
           <Route path="account" element={<Account />} />
+          <Route path="info" element={<Info />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

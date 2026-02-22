@@ -28,11 +28,11 @@ export default function Footer() {
         <div className="footer-col">
           <h4>Help</h4>
           <ul>
-            <li><a href="#">Size Guide</a></li>
-            <li><a href="#">Shipping &amp; Returns</a></li>
-            <li><a href="#">FAQ</a></li>
-            <li><a href="#">Contact Us</a></li>
-            <li><a href="#">Track Order</a></li>
+            <li><Link to="/info#size-guide">Size Guide</Link></li>
+            <li><Link to="/info#shipping">Shipping &amp; Returns</Link></li>
+            <li><Link to="/info#faq">FAQ</Link></li>
+            <li><Link to="/info#contact">Contact Us</Link></li>
+            <li><Link to="/account">Track Order</Link></li>
           </ul>
         </div>
 
@@ -42,8 +42,8 @@ export default function Footer() {
             <li><Link to="/about">Our Story</Link></li>
             <li><Link to="/lookbook">Lookbook</Link></li>
             <li><Link to="/journal">Journal</Link></li>
-            <li><a href="#">Sustainability</a></li>
-            <li><a href="#">Careers</a></li>
+            <li><Link to="/about">Sustainability</Link></li>
+            <li><a href="mailto:hello@theairaedit.com">Careers</a></li>
           </ul>
         </div>
       </div>
@@ -51,11 +51,11 @@ export default function Footer() {
       <div className="footer-bottom">
         <p>&copy; {new Date().getFullYear()} The Aira Edit. All rights reserved.</p>
         <div className="social-links">
-          <a href="#">Instagram</a>
-          <a href="#">Pinterest</a>
-          <a href="#">TikTok</a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer">Pinterest</a>
+          <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer">TikTok</a>
         </div>
-        <p>Privacy Policy &middot; Terms of Service</p>
+        <p><Link to="/info#privacy">Privacy Policy</Link> &middot; <Link to="/info#terms">Terms of Service</Link></p>
       </div>
     </footer>
   );

@@ -2,12 +2,30 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useFeaturedProducts } from '../../hooks/useProducts';
 import { useAuthStore } from '../../store/authStore';
 import { useWishlistStore } from '../../store/wishlistStore';
+import { useCartStore } from '../../store/cartStore';
+import { useToastStore } from '../../store/toastStore';
+import type { Product } from '../../types';
 
 export default function FeaturedCollection() {
   const { products, loading } = useFeaturedProducts();
   const user = useAuthStore((s) => s.user);
   const { toggle, has } = useWishlistStore();
+  const addItem = useCartStore((s) => s.addItem);
+  const addToast = useToastStore((s) => s.add);
   const navigate = useNavigate();
+
+  const handleQuickAdd = (e: React.MouseEvent, product: Product) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (product.stock_quantity === 0) {
+      addToast('This item is sold out', 'error');
+      return;
+    }
+    const size = product.sizes[0] || '';
+    const color = product.colors[0]?.name || '';
+    addItem(product, size, color);
+    addToast(`${product.name} added to bag`);
+  };
 
   const handleWishlist = (e: React.MouseEvent, productId: string) => {
     e.preventDefault();
@@ -54,7 +72,7 @@ export default function FeaturedCollection() {
                   >
                     {has(p.id) ? '\u2665' : '\u2661'}
                   </button>
-                  <button className="product-quick-add" onClick={(e) => e.preventDefault()}>Quick Add</button>
+                  <button className="product-quick-add" onClick={(e) => handleQuickAdd(e, p)}>Quick Add</button>
                 </div>
                 <p className="product-category">{p.category?.name}</p>
                 <h3 className="product-name">{p.name}</h3>

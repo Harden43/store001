@@ -55,7 +55,7 @@ export default function HeroSection() {
         <p className="hero-tagline">Curated pieces for the woman who moves with intention</p>
         <div className="hero-cta-group">
           <Link to="/shop" className="btn-primary">Shop the Edit</Link>
-          <Link to="/shop" className="btn-outline">View Lookbook</Link>
+          <Link to="/lookbook" className="btn-outline">View Lookbook</Link>
         </div>
       </div>
 

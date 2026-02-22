@@ -3,6 +3,7 @@ import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
 import { useAuthStore } from '../store/authStore';
 import { useWishlistStore } from '../store/wishlistStore';
+import { useCartStore } from '../store/cartStore';
 import { useToastStore } from '../store/toastStore';
 import SEO from '../components/SEO';
 import type { ProductFilters } from '../types';
@@ -29,6 +30,7 @@ export default function Shop() {
   const { products, loading } = useProducts(filters);
   const user = useAuthStore((s) => s.user);
   const { toggle, has } = useWishlistStore();
+  const addItem = useCartStore((s) => s.addItem);
   const addToast = useToastStore((s) => s.add);
   const navigate = useNavigate();
 
@@ -102,7 +104,13 @@ export default function Shop() {
                     >
                       {has(p.id) ? '\u2665' : '\u2661'}
                     </button>
-                    <button className="product-quick-add" onClick={(e) => e.preventDefault()}>Quick Add</button>
+                    <button className="product-quick-add" onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      if (p.stock_quantity === 0) { addToast('This item is sold out', 'error'); return; }
+                      addItem(p, p.sizes[0] || '', p.colors[0]?.name || '');
+                      addToast(`${p.name} added to bag`);
+                    }}>Quick Add</button>
                   </div>
                   <p className="product-category">{p.category?.name}</p>
                   <h3 className="product-name">{p.name}</h3>

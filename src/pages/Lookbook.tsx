@@ -103,7 +103,7 @@ export default function Lookbook() {
             ))}
           </div>
         ) : (
-          <p className="shop-empty">Lookbook coming soon — check back for editorial inspiration!</p>
+          <p className="shop-empty">No featured pieces yet. Check back soon for editorial inspiration!</p>
         )}
       </div>
     </div>

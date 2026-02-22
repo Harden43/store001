@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/authStore';
 import { useCartStore } from '../store/cartStore';
 import { useToastStore } from '../store/toastStore';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
@@ -7,6 +8,8 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
 export default function Cart() {
   const { items, removeItem, updateQty, subtotal } = useCartStore();
   const addToast = useToastStore((s) => s.add);
+  const user = useAuthStore((s) => s.user);
+  const navigate = useNavigate();
 
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
@@ -169,7 +172,18 @@ export default function Cart() {
               <span>Total</span>
               <span>${total.toFixed(2)}</span>
             </div>
-            <button className="btn-full" style={{ marginTop: '1.5rem' }}>
+            <button
+              className="btn-full"
+              style={{ marginTop: '1.5rem' }}
+              onClick={() => {
+                if (!user) {
+                  addToast('Please sign in to checkout', 'info');
+                  navigate('/account');
+                } else {
+                  addToast('Checkout coming soon — payment integration in progress', 'info');
+                }
+              }}
+            >
               Proceed to Checkout
             </button>
           </div>

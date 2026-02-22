@@ -1,3 +1,6 @@
+import SEO from '../components/SEO';
+import { useToastStore } from '../store/toastStore';
+
 const POSTS = [
   {
     id: 1,
@@ -50,8 +53,11 @@ const POSTS = [
 ];
 
 export default function Journal() {
+  const addToast = useToastStore((s) => s.add);
+
   return (
     <div className="page">
+      <SEO title="Journal" description="Thoughts on slow fashion, styling guides, and the stories behind what we create." />
       <div className="page-inner">
         <div className="page-header">
           <span className="section-eyebrow">Stories & Style</span>
@@ -64,7 +70,12 @@ export default function Journal() {
 
         <div className="journal-grid">
           {POSTS.map((post, i) => (
-            <article key={post.id} className={`journal-card ${i === 0 ? 'journal-featured' : ''}`}>
+            <article
+              key={post.id}
+              className={`journal-card ${i === 0 ? 'journal-featured' : ''}`}
+              onClick={() => addToast('Full article coming soon', 'info')}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="journal-card-image" style={{ background: post.gradient }} />
               <div className="journal-card-body">
                 <div className="journal-meta">

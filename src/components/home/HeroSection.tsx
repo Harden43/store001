@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useSiteSettings } from '../../hooks/useSiteSettings';
 
 function BotanicalSvg() {
   return (
@@ -32,6 +33,8 @@ function BotanicalSvg() {
 }
 
 export default function HeroSection() {
+  const { get } = useSiteSettings();
+
   return (
     <section className="hero">
       <div className="hero-texture" />
@@ -47,15 +50,15 @@ export default function HeroSection() {
       </div>
 
       <div className="hero-content">
-        <p className="hero-eyebrow">New Season Arrivals — Spring 2026</p>
+        <p className="hero-eyebrow">{get('hero_eyebrow')}</p>
         <span className="hero-title-the">the</span>
         <span className="hero-title-aira">aira</span>
         <span className="hero-title-edit">e d i t</span>
         <div className="hero-divider" />
-        <p className="hero-tagline">Curated pieces for the woman who moves with intention</p>
+        <p className="hero-tagline">{get('hero_tagline')}</p>
         <div className="hero-cta-group">
-          <Link to="/shop" className="btn-primary">Shop the Edit</Link>
-          <Link to="/lookbook" className="btn-outline">View Lookbook</Link>
+          <Link to={get('hero_cta_primary_link')} className="btn-primary">{get('hero_cta_primary_text')}</Link>
+          <Link to={get('hero_cta_secondary_link')} className="btn-outline">{get('hero_cta_secondary_text')}</Link>
         </div>
       </div>
 

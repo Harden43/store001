@@ -24,6 +24,12 @@ const AdminProductForm = lazy(() => import('./pages/admin/AdminProductForm'));
 const AdminOrders = lazy(() => import('./pages/admin/AdminOrders'));
 const AdminOrderDetail = lazy(() => import('./pages/admin/AdminOrderDetail'));
 const AdminCategories = lazy(() => import('./pages/admin/AdminCategories'));
+const AdminPromoCodes = lazy(() => import('./pages/admin/AdminPromoCodes'));
+const AdminSubscribers = lazy(() => import('./pages/admin/AdminSubscribers'));
+const AdminCustomers = lazy(() => import('./pages/admin/AdminCustomers'));
+const AdminJournal = lazy(() => import('./pages/admin/AdminJournal'));
+const AdminJournalForm = lazy(() => import('./pages/admin/AdminJournalForm'));
+const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'));
 
 export default function App() {
   const initialize = useAuthStore((s) => s.initialize);
@@ -45,6 +51,13 @@ export default function App() {
             <Route path="orders" element={<AdminOrders />} />
             <Route path="orders/:id" element={<AdminOrderDetail />} />
             <Route path="categories" element={<AdminCategories />} />
+            <Route path="promo-codes" element={<AdminPromoCodes />} />
+            <Route path="subscribers" element={<AdminSubscribers />} />
+            <Route path="customers" element={<AdminCustomers />} />
+            <Route path="journal" element={<AdminJournal />} />
+            <Route path="journal/new" element={<AdminJournalForm />} />
+            <Route path="journal/:id/edit" element={<AdminJournalForm />} />
+            <Route path="settings" element={<AdminSettings />} />
           </Route>
         </Route>
 

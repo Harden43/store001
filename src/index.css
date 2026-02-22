@@ -3425,8 +3425,8 @@ body {
   color: #c44;
 }
 
-/* ── Toggles ── */
-.admin-toggle {
+/* ── Toggles (button style) ── */
+.admin-toggle-btn {
   padding: 0.25rem 0.6rem;
   font-family: 'Jost', sans-serif;
   font-size: 0.75rem;
@@ -3436,7 +3436,7 @@ body {
   cursor: pointer;
   transition: all 0.2s;
 }
-.admin-toggle.on {
+.admin-toggle-btn.on {
   background: rgba(122,140,117,0.12);
   color: var(--sage-dark);
   border-color: var(--sage-light);
@@ -3848,6 +3848,98 @@ body {
   border-color: var(--gold);
   background: rgba(201,168,76,0.05);
   color: var(--gold);
+}
+
+/* ── Admin Toggle Switch ── */
+.admin-toggle {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+  cursor: pointer;
+}
+.admin-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.admin-toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #ccc;
+  border-radius: 22px;
+  transition: background 0.25s;
+}
+.admin-toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 3px;
+  bottom: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.25s;
+}
+.admin-toggle input:checked + .admin-toggle-slider {
+  background: var(--sage);
+}
+.admin-toggle input:checked + .admin-toggle-slider::before {
+  transform: translateX(18px);
+}
+
+/* ── Admin Badges ── */
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.6rem;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+.admin-badge-green {
+  background: rgba(122,140,117,0.12);
+  color: #4a6b46;
+}
+.admin-badge-red {
+  background: rgba(204,68,68,0.1);
+  color: #c44;
+}
+.admin-badge-yellow {
+  background: rgba(201,168,76,0.15);
+  color: #8a7030;
+}
+.admin-badge-gold {
+  background: rgba(201,168,76,0.18);
+  color: #8a6c20;
+}
+.admin-badge-gray {
+  background: rgba(0,0,0,0.06);
+  color: var(--text-mid);
+}
+
+/* ── Admin Stat Pill ── */
+.admin-stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 1rem;
+  background: rgba(122,140,117,0.08);
+  border: 1px solid rgba(122,140,117,0.15);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.8rem;
+  color: var(--sage-dark);
+}
+
+/* ── Admin Textarea ── */
+.admin-textarea {
+  resize: vertical;
+  min-height: 60px;
+  font-family: 'Jost', sans-serif;
+  line-height: 1.6;
 }
 
 /* ---- INFO / HELP PAGE ---- */

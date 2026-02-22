@@ -302,6 +302,130 @@ Deno.serve(async (req) => {
         });
       }
 
+      // ── Promo Codes ─────────────────────────────────────
+      case "promo-codes": {
+        const { data } = await supabase
+          .from("promo_codes")
+          .select("*")
+          .order("created_at", { ascending: false });
+        return json({ data: data ?? [] });
+      }
+
+      case "create-promo-code": {
+        const { error } = await supabase.from("promo_codes").insert(params.data);
+        if (error) return err(error.message);
+        return json({ success: true });
+      }
+
+      case "update-promo-code": {
+        const { error } = await supabase.from("promo_codes").update(params.data).eq("id", params.id);
+        if (error) return err(error.message);
+        return json({ success: true });
+      }
+
+      case "delete-promo-code": {
+        const { error } = await supabase.from("promo_codes").delete().eq("id", params.id);
+        if (error) return err(error.message);
+        return json({ success: true });
+      }
+
+      // ── Newsletter Subscribers ──────────────────────────
+      case "subscribers": {
+        const { data } = await supabase
+          .from("newsletter_subscribers")
+          .select("*")
+          .order("subscribed_at", { ascending: false });
+        return json({ data: data ?? [] });
+      }
+
+      case "delete-subscriber": {
+        const { error } = await supabase.from("newsletter_subscribers").delete().eq("id", params.id);
+        if (error) return err(error.message);
+        return json({ success: true });
+      }
+
+      // ── Customers ───────────────────────────────────────
+      case "customers": {
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        const { data: orderStats } = await supabase
+          .from("orders")
+          .select("user_id, total")
+          .not("status", "in", '("cancelled","refunded")');
+
+        const statsMap: Record<string, { count: number; spent: number }> = {};
+        for (const o of orderStats ?? []) {
+          if (!statsMap[o.user_id]) statsMap[o.user_id] = { count: 0, spent: 0 };
+          statsMap[o.user_id].count++;
+          statsMap[o.user_id].spent += Number(o.total);
+        }
+
+        const customers = (profiles ?? []).map((p: Record<string, unknown>) => ({
+          ...p,
+          order_count: statsMap[p.id as string]?.count ?? 0,
+          total_spent: statsMap[p.id as string]?.spent ?? 0,
+        }));
+
+        return json({ data: customers });
+      }
+
+      case "toggle-admin": {
+        const { error } = await supabase.from("profiles").update({ is_admin: params.value }).eq("id", params.id);
+        if (error) return err(error.message);
+        return json({ success: true });
+      }
+
+      // ── Journal Posts ───────────────────────────────────
+      case "journal-posts": {
+        const { data } = await supabase
+          .from("journal_posts")
+          .select("*")
+          .order("created_at", { ascending: false });
+        return json({ data: data ?? [] });
+      }
+
+      case "journal-post": {
+        const { data, error } = await supabase.from("journal_posts").select("*").eq("id", params.id).single();
+        if (error) return err(error.message);
+        return json({ data });
+      }
+
+      case "create-journal-post": {
+        const { data, error } = await supabase.from("journal_posts").insert(params.data).select().single();
+        if (error) return err(error.message);
+        return json({ data });
+      }
+
+      case "update-journal-post": {
+        const { error } = await supabase.from("journal_posts").update(params.data).eq("id", params.id);
+        if (error) return err(error.message);
+        return json({ success: true });
+      }
+
+      case "delete-journal-post": {
+        const { error } = await supabase.from("journal_posts").delete().eq("id", params.id);
+        if (error) return err(error.message);
+        return json({ success: true });
+      }
+
+      // ── Site Settings ───────────────────────────────────
+      case "site-settings": {
+        const { data } = await supabase.from("site_settings").select("*");
+        return json({ data: data ?? [] });
+      }
+
+      case "update-settings": {
+        for (const item of params.settings as { key: string; value: string }[]) {
+          await supabase
+            .from("site_settings")
+            .upsert({ key: item.key, value: item.value, updated_at: new Date().toISOString() }, { onConflict: "key" });
+        }
+        return json({ success: true });
+      }
+
       default:
         return err(`Unknown action: ${action}`);
     }

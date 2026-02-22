@@ -108,7 +108,36 @@ export interface PromoCode {
   discount_type: 'percentage' | 'fixed';
   discount_value: number;
   min_order_value: number;
+  max_uses: number | null;
+  current_uses: number;
+  expires_at: string | null;
   is_active: boolean;
+  created_at: string;
+}
+
+export interface NewsletterSubscriber {
+  id: string;
+  email: string;
+  subscribed_at: string;
+  is_active: boolean;
+}
+
+export interface JournalPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  body: string | null;
+  category: string | null;
+  cover_image_url: string | null;
+  is_published: boolean;
+  published_at: string | null;
+  created_at: string;
+}
+
+export interface CustomerProfile extends Profile {
+  order_count: number;
+  total_spent: number;
 }
 
 export interface WishlistItem {

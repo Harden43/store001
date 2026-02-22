@@ -1,20 +1,17 @@
 import { Link } from 'react-router-dom';
+import { useSiteSettings } from '../../hooks/useSiteSettings';
 
 export default function BrandStory() {
+  const { get } = useSiteSettings();
+
   return (
     <section className="brand-story">
       <div className="brand-story-text">
-        <span className="eyebrow">Our Philosophy</span>
-        <h2>Dressed with <em>purpose,</em><br />worn with grace</h2>
-        <p>
-          The Aira Edit is a curation of thoughtfully designed pieces that celebrate femininity in
-          its quietest, most powerful form. Each garment is chosen for its quality, its story, and
-          the way it moves with the women who wear it.
-        </p>
-        <p>
-          We believe clothing is more than fabric — it's a language. One that speaks before you do.
-        </p>
-        <Link to="/about" className="btn-outline">Our Story &rarr;</Link>
+        <span className="eyebrow">{get('brand_story_eyebrow')}</span>
+        <h2>{get('brand_story_heading')}</h2>
+        <p>{get('brand_story_paragraph_1')}</p>
+        <p>{get('brand_story_paragraph_2')}</p>
+        <Link to={get('brand_story_cta_link')} className="btn-outline">{get('brand_story_cta_text')} &rarr;</Link>
       </div>
 
       <div className="brand-story-visual">

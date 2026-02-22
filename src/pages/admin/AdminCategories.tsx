@@ -11,10 +11,11 @@ interface FormState {
   name: string;
   slug: string;
   description: string;
+  image_url: string;
   sort_order: number;
 }
 
-const EMPTY: FormState = { name: '', slug: '', description: '', sort_order: 0 };
+const EMPTY: FormState = { name: '', slug: '', description: '', image_url: '', sort_order: 0 };
 
 export default function AdminCategories() {
   const { categories, loading, createCategory, updateCategory, deleteCategory, refetch } = useAdminCategories();
@@ -35,6 +36,7 @@ export default function AdminCategories() {
       name: cat.name,
       slug: cat.slug,
       description: cat.description || '',
+      image_url: cat.image_url || '',
       sort_order: cat.sort_order,
     });
     setShowForm(true);
@@ -45,6 +47,7 @@ export default function AdminCategories() {
       name: form.name,
       slug: form.slug || generateSlug(form.name),
       description: form.description || null,
+      image_url: form.image_url || null,
       sort_order: form.sort_order,
     };
 
@@ -131,6 +134,23 @@ export default function AdminCategories() {
               />
             </div>
           </div>
+          <div className="admin-form-row">
+            <div className="admin-form-group admin-form-grow">
+              <label className="admin-form-label">Image URL</label>
+              <input
+                className="admin-form-input"
+                value={form.image_url}
+                onChange={(e) => setForm((f) => ({ ...f, image_url: e.target.value }))}
+                placeholder="https://..."
+              />
+            </div>
+            {form.image_url && (
+              <div className="admin-form-group">
+                <label className="admin-form-label">Preview</label>
+                <img src={form.image_url} alt="" style={{ width: 80, height: 56, objectFit: 'cover', borderRadius: 6 }} />
+              </div>
+            )}
+          </div>
           <div className="admin-form-actions">
             <button className="admin-btn admin-btn-ghost" onClick={() => { setShowForm(false); setEditId(null); }}>
               <X size={14} /> Cancel
@@ -150,6 +170,7 @@ export default function AdminCategories() {
             <thead>
               <tr>
                 <th>Order</th>
+                <th>Image</th>
                 <th>Name</th>
                 <th>Slug</th>
                 <th>Description</th>
@@ -166,6 +187,13 @@ export default function AdminCategories() {
                       <button className="admin-btn-icon" onClick={() => handleReorder(c, 'down')} title="Move down"><ChevronDown size={14} /></button>
                     </div>
                   </td>
+                  <td>
+                    {c.image_url ? (
+                      <img src={c.image_url} alt="" style={{ width: 48, height: 34, objectFit: 'cover', borderRadius: 4 }} />
+                    ) : (
+                      <span style={{ color: '#aaa' }}>—</span>
+                    )}
+                  </td>
                   <td className="admin-td-name">{c.name}</td>
                   <td>{c.slug}</td>
                   <td>{c.description || '—'}</td>
@@ -178,7 +206,7 @@ export default function AdminCategories() {
                 </tr>
               ))}
               {categories.length === 0 && (
-                <tr><td colSpan={5} className="admin-empty">No categories</td></tr>
+                <tr><td colSpan={6} className="admin-empty">No categories</td></tr>
               )}
             </tbody>
           </table>

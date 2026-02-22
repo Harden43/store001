@@ -1,12 +1,9 @@
-const items = [
-  'New Arrivals',
-  'Free Shipping Over $150',
-  'Spring Collection 2026',
-  'Curated with Care',
-  'Ethically Sourced',
-];
+import { useSiteSettings } from '../../hooks/useSiteSettings';
 
 export default function MarqueeStrip() {
+  const { get } = useSiteSettings();
+  const items = get('marquee_messages').split(',').map((s) => s.trim()).filter(Boolean);
+
   return (
     <div className="marquee-strip">
       <div className="marquee-inner">

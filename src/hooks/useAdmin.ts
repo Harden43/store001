@@ -44,3 +44,51 @@ export function useAdminCategories() {
     refetch: store.fetchCategories,
   };
 }
+
+export function useAdminPromoCodes() {
+  const store = useAdminStore();
+  useEffect(() => { store.fetchPromoCodes(); }, []);
+  return {
+    promoCodes: store.promoCodes,
+    loading: store.promoCodesLoading,
+    createPromoCode: store.createPromoCode,
+    updatePromoCode: store.updatePromoCode,
+    deletePromoCode: store.deletePromoCode,
+    refetch: store.fetchPromoCodes,
+  };
+}
+
+export function useAdminSubscribers() {
+  const store = useAdminStore();
+  useEffect(() => { store.fetchSubscribers(); }, []);
+  return {
+    subscribers: store.subscribers,
+    loading: store.subscribersLoading,
+    deleteSubscriber: store.deleteSubscriber,
+    refetch: store.fetchSubscribers,
+  };
+}
+
+export function useAdminCustomers() {
+  const store = useAdminStore();
+  useEffect(() => { store.fetchCustomers(); }, []);
+  return {
+    customers: store.customers,
+    loading: store.customersLoading,
+    toggleAdmin: store.toggleAdmin,
+    refetch: store.fetchCustomers,
+  };
+}
+
+export function useAdminJournal() {
+  const store = useAdminStore();
+  useEffect(() => { store.fetchJournalPosts(); }, []);
+  return {
+    journalPosts: store.journalPosts,
+    loading: store.journalLoading,
+    createJournalPost: store.createJournalPost,
+    updateJournalPost: store.updateJournalPost,
+    deleteJournalPost: store.deleteJournalPost,
+    refetch: store.fetchJournalPosts,
+  };
+}

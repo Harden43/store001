@@ -80,7 +80,7 @@ export default function AdminProducts() {
                   </td>
                   <td>
                     <button
-                      className={`admin-toggle ${p.is_active ? 'on' : ''}`}
+                      className={`admin-toggle-btn ${p.is_active ? 'on' : ''}`}
                       onClick={() => toggleProductField(p.id, 'is_active', !p.is_active)}
                     >
                       {p.is_active ? 'Yes' : 'No'}
@@ -88,7 +88,7 @@ export default function AdminProducts() {
                   </td>
                   <td>
                     <button
-                      className={`admin-toggle ${p.is_featured ? 'on' : ''}`}
+                      className={`admin-toggle-btn ${p.is_featured ? 'on' : ''}`}
                       onClick={() => toggleProductField(p.id, 'is_featured', !p.is_featured)}
                     >
                       {p.is_featured ? 'Yes' : 'No'}

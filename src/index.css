@@ -3422,6 +3422,24 @@ main > .page { animation: pageFadeIn 0.35s ease; }
   .pdp-related { padding: 2rem 1.5rem; }
   .not-found-code { font-size: 5rem; }
   .size-guide-modal { padding: 1.5rem; }
+  .footer-bottom {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+  .pdp-info h1 { font-size: 2rem; }
+  .brand-story-text h2 { font-size: 2.2rem; }
+  .newsletter h2 { font-size: 2rem; }
+  .cart-page h1 { font-size: 1.8rem; margin-bottom: 1.5rem; text-align: center; }
+  .cat-label h3 { font-size: 1.5rem; }
+  .qty-control button {
+    min-width: 36px;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 
@@ -4654,10 +4672,58 @@ main > .page { animation: pageFadeIn 0.35s ease; }
 
 /* ---- NARROW PHONES ---- */
 @media (max-width: 480px) {
-  .product-grid { grid-template-columns: 1fr; }
+  .product-grid { grid-template-columns: 1fr; gap: 1.25rem; }
   .categories-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
   .back-to-top { bottom: 1rem; right: 1rem; width: 40px; height: 40px; }
+
+  /* Tighten page padding */
+  .site-nav { padding: 0 1rem; }
+  .page-inner { padding: 2rem 1rem 3rem; }
+  .section { padding: 3rem 1rem; }
+  .pdp-grid { padding: 1.5rem 1rem 3rem; }
+  .cart-page { padding: 1.5rem 1rem 3rem; }
+  .account-page { padding: 1.5rem 1rem 3rem; }
+  .site-footer { padding: 2.5rem 1rem 1.5rem; }
+  .categories { padding: 3rem 1rem; }
+  .newsletter { padding: 3rem 1rem; }
+  .brand-story { padding: 3rem 1rem; gap: 2rem; }
+  .about-section { padding: 2rem 1rem; }
+  .about-values { padding: 2rem 1rem; }
+  .about-cta { padding: 2rem 1rem; }
+  .pdp-related { padding: 1.5rem 1rem; }
+
+  /* Shrink cart item image to reclaim space */
+  .cart-item-img { width: 70px; height: 85px; }
+  .cart-item { gap: 1rem; }
+
+  /* Further scale typography */
+  .pdp-info h1 { font-size: 1.7rem; }
+  .brand-story-text h2 { font-size: 1.8rem; }
+  .newsletter h2 { font-size: 1.6rem; }
+  .cart-page h1 { font-size: 1.5rem; }
+  .section-header { margin-bottom: 2.5rem; }
+  .page-header { margin-bottom: 2rem; }
+
+  /* Cart summary tighten */
+  .cart-summary { padding: 1.5rem; }
+
+  /* Empty states */
+  .cart-empty { padding: 4rem 1rem; }
+  .search-empty { padding: 3rem 1rem; }
+
+  /* Hero CTA stack vertically */
+  .hero-cta-group { flex-direction: column; align-items: center; gap: 0.75rem; }
+
+  /* Drawer items smaller */
+  .drawer-item-img { width: 50px; height: 62px; }
+
+  /* Breadcrumbs wrap */
+  .breadcrumbs { flex-wrap: wrap; margin-bottom: 1rem; }
+
+  /* Lookbook single column */
+  .lookbook-grid { grid-template-columns: 1fr; }
+  .lookbook-tall, .lookbook-wide, .lookbook-normal { min-height: 250px; }
 }
 
 /* ---- TOUCH DEVICES ---- */

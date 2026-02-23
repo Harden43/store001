@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useSiteSettings } from '../../hooks/useSiteSettings';
 
 export default function Footer() {
+  const { get } = useSiteSettings();
+
   return (
     <footer className="site-footer">
       <div className="footer-grid">
@@ -51,9 +54,9 @@ export default function Footer() {
       <div className="footer-bottom">
         <p>&copy; {new Date().getFullYear()} The Aira Edit. All rights reserved.</p>
         <div className="social-links">
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
-          <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer">Pinterest</a>
-          <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer">TikTok</a>
+          {get('social_instagram') && <a href={get('social_instagram')} target="_blank" rel="noopener noreferrer">Instagram</a>}
+          {get('social_pinterest') && <a href={get('social_pinterest')} target="_blank" rel="noopener noreferrer">Pinterest</a>}
+          {get('social_tiktok') && <a href={get('social_tiktok')} target="_blank" rel="noopener noreferrer">TikTok</a>}
         </div>
         <p><Link to="/info#privacy">Privacy Policy</Link> &middot; <Link to="/info#terms">Terms of Service</Link></p>
       </div>

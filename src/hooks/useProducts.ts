@@ -16,6 +16,13 @@ function filterMockProducts(filters?: ProductFilters): Product[] {
   if (filters?.maxPrice) {
     results = results.filter((p) => p.price <= filters.maxPrice!);
   }
+  if (filters?.sizes?.length) {
+    results = results.filter((p) => filters.sizes!.some((s) => (p.sizes || []).includes(s)));
+  }
+  if (filters?.colors?.length) {
+    results = results.filter((p) => filters.colors!.some((c) => (p.colors || []).some((pc) => pc.name === c)));
+  }
+
   if (filters?.sortBy === 'price_asc') {
     results.sort((a, b) => a.price - b.price);
   } else if (filters?.sortBy === 'price_desc') {
@@ -64,7 +71,21 @@ export function useProducts(filters?: ProductFilters) {
 
       const { data, error } = await query;
       if (error) throw error;
-      setProducts(data || []);
+
+      // Client-side filtering for JSON array fields (sizes, colors)
+      let filtered = data || [];
+      if (filters?.sizes?.length) {
+        filtered = filtered.filter((p: Product) =>
+          filters.sizes!.some((s) => (p.sizes || []).includes(s))
+        );
+      }
+      if (filters?.colors?.length) {
+        filtered = filtered.filter((p: Product) =>
+          filters.colors!.some((c) => (p.colors || []).some((pc) => pc.name === c))
+        );
+      }
+
+      setProducts(filtered);
     } catch (err) {
       setError((err as Error).message);
     } finally {

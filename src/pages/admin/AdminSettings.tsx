@@ -36,6 +36,29 @@ const SECTIONS: Section[] = [
       { key: 'brand_story_cta_link', label: 'CTA Link' },
     ],
   },
+  {
+    title: 'Shipping',
+    fields: [
+      { key: 'shipping_threshold', label: 'Free Shipping Threshold ($)' },
+      { key: 'shipping_flat_rate', label: 'Flat Rate Shipping ($)' },
+    ],
+  },
+  {
+    title: 'Social Links',
+    fields: [
+      { key: 'social_instagram', label: 'Instagram URL' },
+      { key: 'social_pinterest', label: 'Pinterest URL' },
+      { key: 'social_tiktok', label: 'TikTok URL' },
+    ],
+  },
+  {
+    title: 'Contact Info',
+    fields: [
+      { key: 'contact_email', label: 'Contact Email' },
+      { key: 'contact_phone', label: 'Phone Number' },
+      { key: 'contact_address', label: 'Store Address', multiline: true },
+    ],
+  },
 ];
 
 export default function AdminSettings() {

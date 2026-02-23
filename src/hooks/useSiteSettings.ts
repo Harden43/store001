@@ -15,6 +15,14 @@ const DEFAULTS: Record<string, string> = {
   brand_story_paragraph_2: 'We believe clothing is more than fabric — it\'s a language. One that speaks before you do.',
   brand_story_cta_text: 'Our Story',
   brand_story_cta_link: '/about',
+  shipping_threshold: '150',
+  shipping_flat_rate: '9.95',
+  social_instagram: 'https://instagram.com/theairaedit',
+  social_pinterest: 'https://pinterest.com/theairaedit',
+  social_tiktok: 'https://tiktok.com/@theairaedit',
+  contact_email: 'hello@theairaedit.com',
+  contact_phone: '',
+  contact_address: '',
 };
 
 export function useSiteSettings() {

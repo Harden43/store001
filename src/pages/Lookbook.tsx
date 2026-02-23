@@ -65,7 +65,14 @@ export default function Lookbook() {
         {loading ? (
           <div className="lookbook-grid">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className={`lookbook-card ${getCardSize(i)} lookbook-card-loading`} />
+              <div key={i} className={`lookbook-card ${getCardSize(i)} lookbook-card-loading`}>
+                <div className="lookbook-skeleton-image" />
+                <div className="lookbook-skeleton-overlay">
+                  <div className="skeleton-text" style={{ width: '40%' }} />
+                  <div className="skeleton-text" style={{ width: '70%', height: '18px' }} />
+                  <div className="skeleton-text" style={{ width: '30%' }} />
+                </div>
+              </div>
             ))}
           </div>
         ) : products.length > 0 ? (

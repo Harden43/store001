@@ -1,11 +1,13 @@
 import { Outlet } from 'react-router-dom';
 import AdminSidebar from './AdminSidebar';
 import { useAuthStore } from '../../store/authStore';
+import ErrorBoundary from '../ErrorBoundary';
 
 export default function AdminLayout() {
   const profile = useAuthStore((s) => s.profile);
 
   return (
+    <ErrorBoundary>
     <div className="admin-layout">
       <AdminSidebar />
       <div className="admin-content">
@@ -23,5 +25,6 @@ export default function AdminLayout() {
         </div>
       </div>
     </div>
+    </ErrorBoundary>
   );
 }

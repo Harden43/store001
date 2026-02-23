@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { useCartStore } from '../store/cartStore';
 import { useToastStore } from '../store/toastStore';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 export default function Cart() {
@@ -74,8 +75,11 @@ export default function Cart() {
     );
   }
 
-  const shipping: number = 0;
+  const { get } = useSiteSettings();
+  const shippingThreshold = parseFloat(get('shipping_threshold')) || 150;
+  const shippingFlatRate = parseFloat(get('shipping_flat_rate')) || 9.95;
   const sub = subtotal();
+  const shipping: number = sub >= shippingThreshold ? 0 : shippingFlatRate;
   const total = sub - discount + shipping;
 
   return (
@@ -168,6 +172,12 @@ export default function Cart() {
               <span>Shipping</span>
               <span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
             </div>
+            {shipping === 0 && sub > 0 && (
+              <p className="cart-shipping-note">You've qualified for free shipping!</p>
+            )}
+            {shipping > 0 && (
+              <p className="cart-shipping-note">Free shipping on orders over ${shippingThreshold.toFixed(0)}</p>
+            )}
             <div className="cart-summary-total">
               <span>Total</span>
               <span>${total.toFixed(2)}</span>

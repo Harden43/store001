@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ChevronDown } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useCartStore } from '../store/cartStore';
 import { useWishlistStore } from '../store/wishlistStore';
+import { useOrders } from '../hooks/useOrders';
 import { isSupabaseConfigured } from '../lib/supabase';
 import SEO from '../components/SEO';
 
@@ -10,6 +12,8 @@ export default function Account() {
   const { user, profile, loading, signInWithGoogle, signOut } = useAuthStore();
   const totalItems = useCartStore((s) => s.totalItems);
   const wishlistCount = useWishlistStore((s) => s.productIds.size);
+  const { orders, loading: ordersLoading } = useOrders(user?.id);
+  const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [signingIn, setSigningIn] = useState(false);
 
@@ -129,6 +133,67 @@ export default function Account() {
               </div>
               <span className="account-link-arrow">&#x2192;</span>
             </Link>
+          </div>
+
+          {/* Order History */}
+          <div className="account-orders">
+            <h2 className="account-section-title">Order History</h2>
+            {ordersLoading ? (
+              <p className="account-orders-loading">Loading orders...</p>
+            ) : orders.length === 0 ? (
+              <div className="account-orders-empty">
+                <p>No orders yet.</p>
+                <Link to="/shop" className="btn-outline">Start Shopping &rarr;</Link>
+              </div>
+            ) : (
+              <div className="order-list">
+                {orders.map((order) => {
+                  const isExpanded = expandedOrder === order.id;
+                  const statusClass = order.status === 'delivered' ? 'delivered' : order.status === 'shipped' ? 'shipped' : order.status === 'cancelled' ? 'cancelled' : '';
+                  return (
+                    <div key={order.id} className="order-card">
+                      <button
+                        className="order-card-header"
+                        onClick={() => setExpandedOrder(isExpanded ? null : order.id)}
+                      >
+                        <div className="order-card-info">
+                          <span className="order-number">#{order.order_number}</span>
+                          <span className="order-date">{new Date(order.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                        </div>
+                        <div className="order-card-meta">
+                          <span className={`order-status ${statusClass}`}>{order.status}</span>
+                          <span className="order-total">${order.total.toFixed(2)}</span>
+                          <ChevronDown size={16} className={`order-expand-icon ${isExpanded ? 'expanded' : ''}`} />
+                        </div>
+                      </button>
+                      {isExpanded && order.order_items && (
+                        <div className="order-card-items">
+                          {order.order_items.map((item) => (
+                            <div key={item.id} className="order-item">
+                              <div className="order-item-img">
+                                {item.product_image ? (
+                                  <img src={item.product_image} alt={item.product_name} />
+                                ) : (
+                                  <div style={{ width: '100%', height: '100%', background: '#e8e0d4' }} />
+                                )}
+                              </div>
+                              <div className="order-item-details">
+                                <span className="order-item-name">{item.product_name}</span>
+                                {(item.size || item.color) && (
+                                  <span className="order-item-variant">{[item.size, item.color].filter(Boolean).join(' / ')}</span>
+                                )}
+                              </div>
+                              <span className="order-item-qty">x{item.quantity}</span>
+                              <span className="order-item-price">${(item.unit_price * item.quantity).toFixed(2)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Sign out */}

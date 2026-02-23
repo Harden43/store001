@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 import type { Product } from '../../types';
 
@@ -14,6 +14,7 @@ export default function SearchOverlay({ open, onClose }: Props) {
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (open) {
@@ -73,6 +74,12 @@ export default function SearchOverlay({ open, onClose }: Props) {
             placeholder="Search products..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && query.trim()) {
+                onClose();
+                navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+              }
+            }}
           />
           <button className="search-close" onClick={onClose}>&times;</button>
         </div>
@@ -106,6 +113,13 @@ export default function SearchOverlay({ open, onClose }: Props) {
                 </div>
               </Link>
             ))}
+            <Link
+              to={`/search?q=${encodeURIComponent(query.trim())}`}
+              className="search-view-all"
+              onClick={onClose}
+            >
+              View all results &rarr;
+            </Link>
           </div>
         )}
       </div>

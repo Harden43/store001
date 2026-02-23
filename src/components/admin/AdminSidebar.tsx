@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingBag, Grid3X3, Tag, Mail, Users, BookOpen, Settings, ExternalLink } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingBag, Grid3X3, Tag, Mail, Users, BookOpen, Settings, ExternalLink, X } from 'lucide-react';
 
 const NAV_ITEMS = [
   { to: '/admin', icon: LayoutDashboard, label: 'Dashboard', end: true },
@@ -13,13 +13,23 @@ const NAV_ITEMS = [
   { to: '/admin/settings', icon: Settings, label: 'Settings', end: false },
 ];
 
-export default function AdminSidebar() {
+interface Props {
+  open: boolean;
+  onClose: () => void;
+}
+
+export default function AdminSidebar({ open, onClose }: Props) {
   return (
-    <aside className="admin-sidebar">
-      <div className="admin-sidebar-logo">
-        <span className="admin-logo-the">the</span>
-        <span className="admin-logo-aira">aira</span>
-        <span className="admin-logo-edit">edit</span>
+    <aside className={`admin-sidebar ${open ? 'open' : ''}`}>
+      <div className="admin-sidebar-top">
+        <div className="admin-sidebar-logo">
+          <span className="admin-logo-the">the</span>
+          <span className="admin-logo-aira">aira</span>
+          <span className="admin-logo-edit">edit</span>
+        </div>
+        <button className="admin-sidebar-close" onClick={onClose} aria-label="Close navigation">
+          <X size={18} />
+        </button>
       </div>
       <div className="admin-sidebar-label">Admin Panel</div>
 
@@ -32,6 +42,7 @@ export default function AdminSidebar() {
             className={({ isActive }) =>
               `admin-nav-item ${isActive ? 'active' : ''}`
             }
+            onClick={onClose}
           >
             <Icon size={18} />
             <span>{label}</span>
@@ -41,7 +52,7 @@ export default function AdminSidebar() {
 
       <div className="admin-nav-divider" />
 
-      <NavLink to="/" className="admin-nav-item admin-back-link">
+      <NavLink to="/" className="admin-nav-item admin-back-link" onClick={onClose}>
         <ExternalLink size={18} />
         <span>Back to Store</span>
       </NavLink>

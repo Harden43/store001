@@ -39,6 +39,7 @@ export default function Navbar({ onSearchOpen }: Props) {
           className={`mobile-menu-btn ${menuOpen ? 'active' : ''}`}
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Menu"
+          aria-expanded={menuOpen}
         >
           <span /><span /><span />
         </button>
@@ -59,13 +60,13 @@ export default function Navbar({ onSearchOpen }: Props) {
               <path d="m21 21-4.35-4.35" />
             </svg>
           </button>
-          <Link to="/wishlist" className="nav-wishlist-link" title="Wishlist">
+          <Link to="/wishlist" className="nav-wishlist-link" title="Wishlist" aria-label="Wishlist">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
             </svg>
             {wishlistCount > 0 && <span className="wishlist-badge">{wishlistCount}</span>}
           </Link>
-          <Link to="/account" className="nav-account-link" title="Account">
+          <Link to="/account" className="nav-account-link" title="Account" aria-label="Account">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="8" r="4" />
               <path d="M20 21a8 8 0 1 0-16 0" />

@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
-import { SlidersHorizontal, X } from 'lucide-react';
+import { SlidersHorizontal, X, Heart } from 'lucide-react';
 import { useProducts } from '../hooks/useProducts';
 import { useProductFilterOptions } from '../hooks/useProductFilterOptions';
 import { useAuthStore } from '../store/authStore';
 import { useWishlistStore } from '../store/wishlistStore';
 import { useCartStore } from '../store/cartStore';
 import { useToastStore } from '../store/toastStore';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 import SEO from '../components/SEO';
 import type { ProductFilters } from '../types';
 
@@ -45,16 +46,20 @@ function FilterPanel({
         <div className="filter-price-inputs">
           <input
             type="number"
+            min="0"
+            aria-label="Minimum price"
             placeholder={`${filterOptions.priceRange.min}`}
             value={filters.minPrice || ''}
-            onChange={(e) => setFilters((f) => ({ ...f, minPrice: e.target.value ? Number(e.target.value) : undefined }))}
+            onChange={(e) => setFilters((f) => ({ ...f, minPrice: e.target.value ? Math.max(0, Number(e.target.value)) : undefined }))}
           />
           <span className="filter-price-sep">&ndash;</span>
           <input
             type="number"
+            min="0"
+            aria-label="Maximum price"
             placeholder={`${filterOptions.priceRange.max}`}
             value={filters.maxPrice || ''}
-            onChange={(e) => setFilters((f) => ({ ...f, maxPrice: e.target.value ? Number(e.target.value) : undefined }))}
+            onChange={(e) => setFilters((f) => ({ ...f, maxPrice: e.target.value ? Math.max(0, Number(e.target.value)) : undefined }))}
           />
         </div>
       </div>
@@ -69,6 +74,7 @@ function FilterPanel({
                 key={s}
                 className={`filter-size-btn ${(filters.sizes || []).includes(s) ? 'active' : ''}`}
                 onClick={() => toggleSize(s)}
+                aria-pressed={(filters.sizes || []).includes(s)}
               >
                 {s}
               </button>
@@ -89,6 +95,8 @@ function FilterPanel({
                 style={{ background: c.hex }}
                 onClick={() => toggleColor(c.name)}
                 title={c.name}
+                aria-label={c.name}
+                aria-pressed={(filters.colors || []).includes(c.name)}
               />
             ))}
           </div>
@@ -107,10 +115,21 @@ export default function Shop() {
     sortBy: 'newest',
   });
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const drawerTrapRef = useFocusTrap(drawerOpen);
 
   useEffect(() => {
     setFilters((f) => ({ ...f, category: categoryParam }));
   }, [categoryParam]);
+
+  // Close filter drawer on Escape
+  useEffect(() => {
+    if (!drawerOpen) return;
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setDrawerOpen(false);
+    }
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [drawerOpen]);
 
   const { products, loading } = useProducts(filters);
   const filterOptions = useProductFilterOptions();
@@ -162,6 +181,7 @@ export default function Shop() {
           <select
             value={filters.sortBy}
             onChange={(e) => setFilters({ ...filters, sortBy: e.target.value as ProductFilters['sortBy'] })}
+            aria-label="Sort products"
           >
             {SORT_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>{o.label}</option>
@@ -204,10 +224,10 @@ export default function Shop() {
 
           {/* Mobile Filter Drawer */}
           {drawerOpen && <div className="filter-drawer-backdrop" onClick={() => setDrawerOpen(false)} />}
-          <div className={`filter-drawer ${drawerOpen ? 'open' : ''}`}>
+          <div className={`filter-drawer ${drawerOpen ? 'open' : ''}`} role="dialog" aria-modal="true" aria-label="Product filters" ref={drawerTrapRef}>
             <div className="filter-drawer-header">
               <h3>Filters</h3>
-              <button onClick={() => setDrawerOpen(false)}><X size={20} /></button>
+              <button onClick={() => setDrawerOpen(false)} aria-label="Close filters"><X size={20} /></button>
             </div>
             <FilterPanel filterOptions={filterOptions} filters={filters} setFilters={setFilters} />
             <div className="filter-drawer-footer">
@@ -251,8 +271,9 @@ export default function Shop() {
                         <button
                           className={`product-wishlist ${has(p.id) ? 'active' : ''}`}
                           onClick={(e) => handleWishlist(e, p.id)}
+                          aria-label={has(p.id) ? `Remove ${p.name} from wishlist` : `Add ${p.name} to wishlist`}
                         >
-                          {has(p.id) ? '\u2665' : '\u2661'}
+                          <Heart size={16} fill={has(p.id) ? 'currentColor' : 'none'} />
                         </button>
                         <button className="product-quick-add" onClick={(e) => {
                           e.preventDefault();

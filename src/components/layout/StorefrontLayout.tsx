@@ -7,6 +7,7 @@ import SearchOverlay from './SearchOverlay';
 import ScrollToTop from './ScrollToTop';
 import ToastContainer from './ToastContainer';
 import CookieConsent from './CookieConsent';
+import BackToTop from '../ui/BackToTop';
 import ErrorBoundary from '../ErrorBoundary';
 
 export default function StorefrontLayout() {
@@ -15,14 +16,16 @@ export default function StorefrontLayout() {
   return (
     <ErrorBoundary>
       <>
+        <a href="#main-content" className="skip-to-content">Skip to content</a>
         <ScrollToTop />
         <Navbar onSearchOpen={() => setSearchOpen(true)} />
         <CartDrawer />
         <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
         <ToastContainer />
-        <main><Outlet /></main>
+        <main id="main-content"><Outlet /></main>
         <Footer />
         <CookieConsent />
+        <BackToTop />
       </>
     </ErrorBoundary>
   );

@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { X, Minus, Plus, ArrowLeft } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useCartStore } from '../store/cartStore';
 import { useToastStore } from '../store/toastStore';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { ShoppingBagIcon } from '../components/ui/EmptyStateIcons';
 
 export default function Cart() {
   const { items, removeItem, updateQty, subtotal } = useCartStore();
@@ -16,6 +18,8 @@ export default function Cart() {
   const [discount, setDiscount] = useState(0);
   const [appliedCode, setAppliedCode] = useState('');
   const [promoLoading, setPromoLoading] = useState(false);
+  const [promoState, setPromoState] = useState<'idle' | 'error' | 'success'>('idle');
+  const [removingKey, setRemovingKey] = useState<string | null>(null);
 
   const handleApplyPromo = async () => {
     if (!promoCode.trim()) return;
@@ -23,6 +27,8 @@ export default function Cart() {
 
     if (!isSupabaseConfigured) {
       addToast('Promo codes require database connection', 'error');
+      setPromoState('error');
+      setTimeout(() => setPromoState('idle'), 1500);
       setPromoLoading(false);
       return;
     }
@@ -36,6 +42,8 @@ export default function Cart() {
 
     if (!data) {
       addToast('Invalid or expired promo code', 'error');
+      setPromoState('error');
+      setTimeout(() => setPromoState('idle'), 1500);
       setPromoLoading(false);
       return;
     }
@@ -43,6 +51,8 @@ export default function Cart() {
     const sub = subtotal();
     if (data.min_order_value && sub < data.min_order_value) {
       addToast(`Minimum order of $${data.min_order_value.toFixed(2)} required`, 'error');
+      setPromoState('error');
+      setTimeout(() => setPromoState('idle'), 1500);
       setPromoLoading(false);
       return;
     }
@@ -53,6 +63,8 @@ export default function Cart() {
 
     setDiscount(Math.min(discountAmount, sub));
     setAppliedCode(data.code);
+    setPromoState('success');
+    setTimeout(() => setPromoState('idle'), 1500);
     addToast(`Code "${data.code}" applied!`);
     setPromoLoading(false);
   };
@@ -63,10 +75,20 @@ export default function Cart() {
     setPromoCode('');
   };
 
+  const handleRemoveItem = (productId: string, size: string, color: string) => {
+    const key = `${productId}-${size}-${color}`;
+    setRemovingKey(key);
+    setTimeout(() => {
+      removeItem(productId, size, color);
+      setRemovingKey(null);
+    }, 300);
+  };
+
   if (items.length === 0) {
     return (
       <div className="page">
         <div className="cart-empty">
+          <div className="empty-state-icon"><ShoppingBagIcon /></div>
           <h1>Your Bag is Empty</h1>
           <p>Looks like you haven't added anything yet.</p>
           <Link to="/shop" className="btn-primary">Continue Shopping</Link>
@@ -91,44 +113,48 @@ export default function Cart() {
           {/* Items */}
           <div>
             <ul className="cart-items">
-              {items.map((item) => (
-                <li key={`${item.product.id}-${item.size}-${item.color}`} className="cart-item">
-                  <div className="cart-item-img">
-                    {item.product.images[0] ? (
-                      <img src={item.product.images[0]} alt={item.product.name} />
-                    ) : (
-                      <div style={{ width: '100%', height: '100%', background: '#e8e0d4' }} />
-                    )}
-                  </div>
-
-                  <div className="cart-item-details">
-                    <div>
-                      <Link to={`/shop/${item.product.slug}`} className="cart-item-name">
-                        {item.product.name}
-                      </Link>
-                      <p className="cart-item-variant">{item.size} / {item.color}</p>
+              {items.map((item) => {
+                const key = `${item.product.id}-${item.size}-${item.color}`;
+                return (
+                  <li key={key} className={`cart-item ${removingKey === key ? 'removing' : ''}`}>
+                    <div className="cart-item-img">
+                      {item.product.images[0] ? (
+                        <img src={item.product.images[0]} alt={item.product.name} />
+                      ) : (
+                        <div style={{ width: '100%', height: '100%', background: '#e8e0d4' }} />
+                      )}
                     </div>
 
-                    <div className="cart-item-bottom">
-                      <div className="qty-control">
-                        <button onClick={() => updateQty(item.product.id, item.size, item.color, item.quantity - 1)}>&#x2212;</button>
-                        <span>{item.quantity}</span>
-                        <button onClick={() => updateQty(item.product.id, item.size, item.color, item.quantity + 1)}>+</button>
+                    <div className="cart-item-details">
+                      <div>
+                        <Link to={`/shop/${item.product.slug}`} className="cart-item-name">
+                          {item.product.name}
+                        </Link>
+                        <p className="cart-item-variant">{item.size} / {item.color}</p>
                       </div>
-                      <span className="cart-item-price">${(item.product.price * item.quantity).toFixed(2)}</span>
-                      <button
-                        className="cart-item-remove"
-                        onClick={() => removeItem(item.product.id, item.size, item.color)}
-                      >
-                        &#x2715;
-                      </button>
+
+                      <div className="cart-item-bottom">
+                        <div className="qty-control">
+                          <button onClick={() => updateQty(item.product.id, item.size, item.color, item.quantity - 1)} aria-label={`Decrease quantity of ${item.product.name}`}><Minus size={14} /></button>
+                          <span>{item.quantity}</span>
+                          <button onClick={() => updateQty(item.product.id, item.size, item.color, item.quantity + 1)} aria-label={`Increase quantity of ${item.product.name}`}><Plus size={14} /></button>
+                        </div>
+                        <span className="cart-item-price">${(item.product.price * item.quantity).toFixed(2)}</span>
+                        <button
+                          className="cart-item-remove"
+                          onClick={() => handleRemoveItem(item.product.id, item.size, item.color)}
+                          aria-label={`Remove ${item.product.name} from bag`}
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </li>
-              ))}
+                  </li>
+                );
+              })}
             </ul>
 
-            <Link to="/shop" className="cart-back">&#x2190; Continue shopping</Link>
+            <Link to="/shop" className="cart-back"><ArrowLeft size={14} /> Continue shopping</Link>
           </div>
 
           {/* Summary */}
@@ -140,13 +166,14 @@ export default function Cart() {
               {appliedCode ? (
                 <div className="promo-applied">
                   <span>Code: <strong>{appliedCode}</strong> (-${discount.toFixed(2)})</span>
-                  <button className="promo-remove" onClick={handleRemovePromo}>&times;</button>
+                  <button className="promo-remove" onClick={handleRemovePromo} aria-label="Remove promo code"><X size={14} /></button>
                 </div>
               ) : (
                 <div className="promo-input-wrap">
                   <input
-                    className="promo-input"
+                    className={`promo-input ${promoState !== 'idle' ? promoState : ''}`}
                     placeholder="Promo code"
+                    aria-label="Promo code"
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleApplyPromo()}

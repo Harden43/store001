@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Heart } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useWishlistStore } from '../store/wishlistStore';
+import { HeartIcon } from '../components/ui/EmptyStateIcons';
 import type { Product } from '../types';
 
 export default function Wishlist() {
@@ -76,8 +78,9 @@ export default function Wishlist() {
                     <button
                       className="product-wishlist active"
                       onClick={(e) => handleRemove(e, p.id)}
+                      aria-label={`Remove ${p.name} from wishlist`}
                     >
-                      &#x2665;
+                      <Heart size={16} fill="currentColor" />
                     </button>
                   </div>
                   <p className="product-category">{p.category?.name}</p>
@@ -92,6 +95,7 @@ export default function Wishlist() {
           </div>
         ) : (
           <div className="cart-empty">
+            <div className="empty-state-icon"><HeartIcon /></div>
             <h2>No saved items yet</h2>
             <p>Browse our collection and tap the heart to save your favourites.</p>
             <Link to="/shop" className="btn-primary">Shop Now</Link>

@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
+import { Heart } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useWishlistStore } from '../store/wishlistStore';
 import { useCartStore } from '../store/cartStore';
 import { useToastStore } from '../store/toastStore';
+import Breadcrumbs from '../components/ui/Breadcrumbs';
+import { MagnifyingGlassIcon } from '../components/ui/EmptyStateIcons';
 import SEO from '../components/SEO';
 import type { Product } from '../types';
 
@@ -56,6 +59,10 @@ export default function SearchResults() {
     <div className="page">
       <SEO title={q ? `Search: ${q}` : 'Search'} />
       <div className="page-inner">
+        <Breadcrumbs items={[
+          { label: 'Search' },
+          ...(q ? [{ label: `"${q}"` }] : []),
+        ]} />
         <div className="page-header">
           <span className="section-eyebrow">Search</span>
           <h1 className="section-title">
@@ -96,8 +103,9 @@ export default function SearchResults() {
                       <button
                         className={`product-wishlist ${has(p.id) ? 'active' : ''}`}
                         onClick={(e) => handleWishlist(e, p.id)}
+                        aria-label={has(p.id) ? `Remove ${p.name} from wishlist` : `Add ${p.name} to wishlist`}
                       >
-                        {has(p.id) ? '\u2665' : '\u2661'}
+                        <Heart size={16} fill={has(p.id) ? 'currentColor' : 'none'} />
                       </button>
                       <button className="product-quick-add" onClick={(e) => {
                         e.preventDefault();
@@ -127,6 +135,7 @@ export default function SearchResults() {
           </>
         ) : q.trim() ? (
           <div className="search-empty">
+            <div className="empty-state-icon"><MagnifyingGlassIcon /></div>
             <h2>No results found</h2>
             <p>We couldn't find anything matching "{q}". Try a different search term.</p>
             <Link to="/shop" className="btn-primary">Browse All Products</Link>

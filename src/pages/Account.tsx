@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Star, Heart, Gem, ArrowRight } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useCartStore } from '../store/cartStore';
 import { useWishlistStore } from '../store/wishlistStore';
 import { useOrders } from '../hooks/useOrders';
 import { isSupabaseConfigured } from '../lib/supabase';
+import { ReceiptIcon } from '../components/ui/EmptyStateIcons';
 import SEO from '../components/SEO';
 
 export default function Account() {
@@ -110,28 +111,28 @@ export default function Account() {
           {/* Quick links */}
           <div className="account-links">
             <Link to="/shop" className="account-link-card">
-              <span className="account-link-icon">&#x2606;</span>
+              <span className="account-link-icon"><Star size={18} /></span>
               <div>
                 <span className="account-link-title">Browse Shop</span>
                 <span className="account-link-desc">Discover new arrivals</span>
               </div>
-              <span className="account-link-arrow">&#x2192;</span>
+              <span className="account-link-arrow"><ArrowRight size={16} /></span>
             </Link>
             <Link to="/wishlist" className="account-link-card">
-              <span className="account-link-icon">&#x2661;</span>
+              <span className="account-link-icon"><Heart size={18} /></span>
               <div>
                 <span className="account-link-title">My Wishlist</span>
                 <span className="account-link-desc">Your saved pieces</span>
               </div>
-              <span className="account-link-arrow">&#x2192;</span>
+              <span className="account-link-arrow"><ArrowRight size={16} /></span>
             </Link>
             <Link to="/collections" className="account-link-card">
-              <span className="account-link-icon">&#x25C7;</span>
+              <span className="account-link-icon"><Gem size={18} /></span>
               <div>
                 <span className="account-link-title">Collections</span>
                 <span className="account-link-desc">Curated for you</span>
               </div>
-              <span className="account-link-arrow">&#x2192;</span>
+              <span className="account-link-arrow"><ArrowRight size={16} /></span>
             </Link>
           </div>
 
@@ -142,6 +143,7 @@ export default function Account() {
               <p className="account-orders-loading">Loading orders...</p>
             ) : orders.length === 0 ? (
               <div className="account-orders-empty">
+                <div className="empty-state-icon"><ReceiptIcon /></div>
                 <p>No orders yet.</p>
                 <Link to="/shop" className="btn-outline">Start Shopping &rarr;</Link>
               </div>
@@ -155,6 +157,7 @@ export default function Account() {
                       <button
                         className="order-card-header"
                         onClick={() => setExpandedOrder(isExpanded ? null : order.id)}
+                        aria-expanded={isExpanded}
                       >
                         <div className="order-card-info">
                           <span className="order-number">#{order.order_number}</span>
@@ -166,29 +169,27 @@ export default function Account() {
                           <ChevronDown size={16} className={`order-expand-icon ${isExpanded ? 'expanded' : ''}`} />
                         </div>
                       </button>
-                      {isExpanded && order.order_items && (
-                        <div className="order-card-items">
-                          {order.order_items.map((item) => (
-                            <div key={item.id} className="order-item">
-                              <div className="order-item-img">
-                                {item.product_image ? (
-                                  <img src={item.product_image} alt={item.product_name} />
-                                ) : (
-                                  <div style={{ width: '100%', height: '100%', background: '#e8e0d4' }} />
-                                )}
-                              </div>
-                              <div className="order-item-details">
-                                <span className="order-item-name">{item.product_name}</span>
-                                {(item.size || item.color) && (
-                                  <span className="order-item-variant">{[item.size, item.color].filter(Boolean).join(' / ')}</span>
-                                )}
-                              </div>
-                              <span className="order-item-qty">x{item.quantity}</span>
-                              <span className="order-item-price">${(item.unit_price * item.quantity).toFixed(2)}</span>
+                      <div className={`order-card-items ${isExpanded ? 'expanded' : ''}`}>
+                        {order.order_items && order.order_items.map((item) => (
+                          <div key={item.id} className="order-item">
+                            <div className="order-item-img">
+                              {item.product_image ? (
+                                <img src={item.product_image} alt={item.product_name} />
+                              ) : (
+                                <div style={{ width: '100%', height: '100%', background: '#e8e0d4' }} />
+                              )}
                             </div>
-                          ))}
-                        </div>
-                      )}
+                            <div className="order-item-details">
+                              <span className="order-item-name">{item.product_name}</span>
+                              {(item.size || item.color) && (
+                                <span className="order-item-variant">{[item.size, item.color].filter(Boolean).join(' / ')}</span>
+                              )}
+                            </div>
+                            <span className="order-item-qty">x{item.quantity}</span>
+                            <span className="order-item-price">${(item.unit_price * item.quantity).toFixed(2)}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   );
                 })}

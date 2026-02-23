@@ -1,3 +1,7 @@
+import { useEffect } from 'react';
+import { X } from 'lucide-react';
+import { useFocusTrap } from '../hooks/useFocusTrap';
+
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -13,14 +17,25 @@ const SIZES = [
 ];
 
 export default function SizeGuideModal({ open, onClose }: Props) {
+  const trapRef = useFocusTrap(open);
+
+  useEffect(() => {
+    if (!open) return;
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose();
+    }
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [open, onClose]);
+
   if (!open) return null;
 
   return (
     <div className="size-guide-overlay" onClick={onClose}>
-      <div className="size-guide-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="size-guide-modal" role="dialog" aria-modal="true" aria-label="Size guide" onClick={(e) => e.stopPropagation()} ref={trapRef}>
         <div className="size-guide-header">
           <h2>Size Guide</h2>
-          <button className="size-guide-close" onClick={onClose}>&times;</button>
+          <button className="size-guide-close" onClick={onClose} aria-label="Close size guide"><X size={20} /></button>
         </div>
         <p className="size-guide-note">
           Measurements are in inches. If you're between sizes, we recommend sizing up for a relaxed fit.

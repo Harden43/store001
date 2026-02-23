@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { X } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 import type { Product } from '../../types';
 
 interface Props {
@@ -15,6 +17,7 @@ export default function SearchOverlay({ open, onClose }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
   const navigate = useNavigate();
+  const trapRef = useFocusTrap(open);
 
   useEffect(() => {
     if (open) {
@@ -64,14 +67,15 @@ export default function SearchOverlay({ open, onClose }: Props) {
   if (!open) return null;
 
   return (
-    <div className="search-overlay" onClick={onClose}>
-      <div className="search-container" onClick={(e) => e.stopPropagation()}>
+    <div className="search-overlay" role="dialog" aria-modal="true" aria-label="Search products" onClick={onClose}>
+      <div className="search-container" onClick={(e) => e.stopPropagation()} ref={trapRef}>
         <div className="search-input-wrap">
           <input
             ref={inputRef}
             className="search-input"
             type="text"
             placeholder="Search products..."
+            aria-label="Search products"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => {
@@ -81,7 +85,7 @@ export default function SearchOverlay({ open, onClose }: Props) {
               }
             }}
           />
-          <button className="search-close" onClick={onClose}>&times;</button>
+          <button className="search-close" onClick={onClose} aria-label="Close search"><X size={20} /></button>
         </div>
 
         {loading && <p className="search-status">Searching...</p>}

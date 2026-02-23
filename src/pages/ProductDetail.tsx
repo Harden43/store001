@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import { Minus, Plus, Heart } from 'lucide-react';
 import { useProduct, useProducts } from '../hooks/useProducts';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
@@ -7,6 +8,7 @@ import { useWishlistStore } from '../store/wishlistStore';
 import { useToastStore } from '../store/toastStore';
 import { useRecentlyViewedStore } from '../store/recentlyViewedStore';
 import SizeGuideModal from '../components/SizeGuideModal';
+import Breadcrumbs from '../components/ui/Breadcrumbs';
 import SEO from '../components/SEO';
 
 export default function ProductDetail() {
@@ -108,6 +110,11 @@ export default function ProductDetail() {
         description={product.description || `Shop ${product.name} at The Aira Edit`}
         image={product.images[0]}
       />
+      <Breadcrumbs items={[
+        { label: 'Shop', to: '/shop' },
+        ...(product.category ? [{ label: product.category.name, to: `/shop?cat=${product.category.slug}` }] : []),
+        { label: product.name },
+      ]} />
       <div className="pdp-grid">
         {/* Images */}
         <div>
@@ -127,6 +134,7 @@ export default function ProductDetail() {
                   key={i}
                   onClick={() => setActiveImage(i)}
                   className={`pdp-thumb ${i === activeImage ? 'active' : ''}`}
+                  aria-label={`View image ${i + 1}`}
                 >
                   <img src={img} alt="" />
                 </button>
@@ -148,8 +156,9 @@ export default function ProductDetail() {
                 toggle(product.id, user.id);
                 addToast(wasInWishlist ? 'Removed from wishlist' : 'Added to wishlist');
               }}
+              aria-label={has(product.id) ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
             >
-              {has(product.id) ? '\u2665' : '\u2661'}
+              <Heart size={20} fill={has(product.id) ? 'currentColor' : 'none'} />
             </button>
           </div>
 
@@ -181,6 +190,7 @@ export default function ProductDetail() {
                     key={s}
                     onClick={() => setSelectedSize(s)}
                     className={`size-btn ${selectedSize === s ? 'active' : ''}`}
+                    aria-pressed={selectedSize === s}
                   >
                     {s}
                   </button>
@@ -199,6 +209,7 @@ export default function ProductDetail() {
                     key={c.name}
                     onClick={() => setSelectedColor(c.name)}
                     className={`color-btn ${selectedColor === c.name ? 'active' : ''}`}
+                    aria-pressed={selectedColor === c.name}
                   >
                     <span className="swatch" style={{ background: c.hex }} />
                     {c.name}
@@ -211,9 +222,9 @@ export default function ProductDetail() {
           {/* Qty + Add */}
           <div className="pdp-actions">
             <div className="qty-control">
-              <button onClick={() => setQty(Math.max(1, qty - 1))}>&#x2212;</button>
+              <button onClick={() => setQty(Math.max(1, qty - 1))} aria-label="Decrease quantity"><Minus size={16} /></button>
               <span>{qty}</span>
-              <button onClick={() => setQty(qty + 1)}>+</button>
+              <button onClick={() => setQty(qty + 1)} aria-label="Increase quantity"><Plus size={16} /></button>
             </div>
             <button className="btn-add-bag" onClick={handleAdd} disabled={outOfStock}>
               {outOfStock ? 'Out of Stock' : 'Add to Bag'}

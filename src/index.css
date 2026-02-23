@@ -4674,6 +4674,11 @@ main > .page { animation: pageFadeIn 0.35s ease; }
 @media (max-width: 480px) {
   .product-grid { grid-template-columns: 1fr; gap: 1.25rem; }
   .categories-grid { grid-template-columns: 1fr; }
+  .cat-bg {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
   .footer-grid { grid-template-columns: 1fr; }
   .back-to-top { bottom: 1rem; right: 1rem; width: 40px; height: 40px; }
 
